@@ -1,0 +1,85 @@
+Jonatha - Prática 1 : Rede Social com Neo4j 
+
+
+Descrição:
+
+- Vamos criar um estudo de caso fictício usando o Neo4j e sua linguagem de manipulação
+de dados, chamada Cypher. Suponhamos que estamos construindo um sistema de gerenciamento
+de uma rede social simples. Neste sistema, temos usuários que podem seguir outros usuários
+e interagir com posts.
+
+
+Cenário : 
+ 
+- Vamos começar criando alguns usuários e suas conexões na rede social. 
+Depois, iremos adicionar alguns posts e relacioná-los aos usuários.
+
+
+
+
+CREATE (alice:User {name: 'Alice'}),
+
+    (bob:User {name: 'Bob'}),
+
+    (charlie:User {name: 'Charlie'})
+
+Explique o que aconteceu nessa primeira passagem?
+
+
+Neste primeiro codigo foi criado os usuarios e os nomes deles, cujo são, Alice, Bob e Charlie.
+
+
+
+
+MATCH (alice:User {name: 'Alice'}), (bob:User {name: 'Bob'})
+
+CREATE (alice)-[:FOLLOWS]->(bob)
+
+Explique o que aconteceu nessa passagem?
+
+
+Este comando executa uma conexão do Usuario Alice para o Usuario Bob, como conexão o "FOLLOWS" (SEGUINDO OU SEGUIDOR)
+
+
+
+
+
+MATCH (alice:User {name: 'Alice'}), (charlie:User {name: 'Charlie'})
+
+CREATE (alice)-[:FOLLOWS]->(charlie)
+
+Explique o que aconteceu nessa passagem?
+
+
+Adiciona mais Conexões, de Alice segue o Usuario Charlie, tornando-o um "Seguidor"
+
+
+
+
+
+CREATE (post1:Post {content: 'Hello, World!', timestamp: timestamp()}),
+
+    (post2:Post {content: 'Neo4j is awesome!', timestamp: timestamp()})
+
+Explique o que aconteceu nessa passagem?
+
+
+Executa posts ou "prints" como "Hello, World!" e como "Neo4j is awesome!" do tipo timestamp.
+
+
+
+
+
+**Relacionar posts aos usuários:**
+
+Explique o que aconteceu nessa passagem?
+
+O codigo é o seguinte: 
+
+MATCH (alice:User {name: 'Alice'}), (post1:Post {content: 'Hello, World!'})
+CREATE (alice)-[:POSTED]->(post1)
+
+
+
+
+Fim Projeto 1

@@ -1,0 +1,142 @@
+Jonatha - Prática 2 : Sistema de Gestão de Escolas e Faculdades
+
+
+Descrição do Problema:
+
+Vamos criar um cenário fictício envolvendo alunos, cursos, turmas e professores no 
+Neo4j. Neste cenário, vamos criar diversos nós representando alunos, cursos, turmas e 
+professores, além de estabelecer diferentes tipos de relacionamentos entre eles. 
+Em seguida, vamos explorar esses dados com consultas Cypher para obter insights sobre
+a estrutura da nossa instituição educacional.
+
+
+Comandos: 
+
+CREATE (alice:Aluno {nome: 'Alice'}),
+
+    (bob:Aluno {nome: 'Bob'}),
+
+    (cursoMatematica:Curso {nome: 'Matemática'}),
+
+    (cursoHistoria:Curso {nome: 'História'}),
+
+    (turmaMatematica:Turma {codigo: 'MAT101'}),
+
+    (turmaHistoria:Turma {codigo: 'HIS201'}),
+
+    (professorJoao:Professor {nome: 'João'}),
+
+    (professorMaria:Professor {nome: 'Maria'})
+
+Descreva de forma detalhada o que aconteceu nessa bloco de código do Cypher?
+
+Este comando acima executa a criação de Alunos, Cursos, Turmas e Professores. 
+Cujo os Alunos são Alice e Bob. E os Cursos são Matematica e História, o codigo da turma é "MAT101" e "HIS201".
+E os Professores são João e Maria.
+
+
+
+MATCH (alice:Aluno {nome: 'Alice'}), (bob:Aluno {nome: 'Bob'}),
+
+   (cursoMatematica:Curso {nome: 'Matemática'}), (cursoHistoria:Curso {nome: 'História'})
+
+CREATE (alice)-[:MATRICULADO_EM]->(cursoMatematica),
+
+    (bob)-[:MATRICULADO_EM]->(cursoHistoria)
+
+Descreva de forma detalhada o que aconteceu nessa bloco de código do Cypher?
+
+
+O primeiro codigo "MATCH", ele criar uma relação da aluna Alice com o aluno 
+Bob sobre a relação de cursos que eles tem, no caso Matemática e História.
+
+O segundo, "CREATE", cria a Relação da aluna Alice com a Matricula no Curso 
+de Matematica, e Bob com o Curso de História.
+
+
+
+MATCH (cursoMatematica:Curso {nome: 'Matemática'}), (turmaMatematica:Turma {codigo: 'MAT101'}),
+
+   (cursoHistoria:Curso {nome: 'História'}), (turmaHistoria:Turma {codigo: 'HIS201'})
+
+CREATE (cursoMatematica)-[:OFERECIDO_EM]->(turmaMatematica),
+
+    (cursoHistoria)-[:OFERECIDO_EM]->(turmaHistoria)
+
+Descreva de forma detalhada o que aconteceu nessa bloco de código do Cypher?
+
+O primerio codigo "MATCH", ele executa uma relação com o Curso de Matemática
+com o codigo da turma de Matemática, que é "MAT101".
+
+Já o segundo codigo, cria a relação do Curso de Matematica "Oferecido' a 
+Turma de Matematica, obviamente. E também o curso de história com a turma de Historia.
+
+
+
+MATCH (turmaMatematica:Turma {codigo: 'MAT101'}), (professorJoao:Professor {nome: 'João'}),
+
+   (turmaHistoria:Turma {codigo: 'HIS201'}), (professorMaria:Professor {nome: 'Maria'})
+
+CREATE (professorJoao)-[:MINISTRA]->(turmaMatematica),
+
+    (professorMaria)-[:MINISTRA]->(turmaHistoria)
+
+Descreva de forma detalhada o que aconteceu nessa bloco de código do Cypher?
+
+Resumindo, esse bloco de código do Cypher está criando relações entre professores e turmas, indicando quais professores estão ministrando quais turmas.
+
+Esta parte da consulta está encontrando dois nós na base de dados - um nó representando a turma de código 'MAT101' e outro representando o professor com o nome 'João'. Esses nós são identificados com os rótulos "Turma" e "Professor", respectivamente, e são atribuídos às variáveis.
+
+
+MATCH (aluno:Aluno)-[:MATRICULADO_EM]->(curso:Curso)
+
+RETURN aluno.nome, curso.nome
+
+Descreva de forma detalhada o que aconteceu nessa bloco de código do Cypher?
+
+Estes comandos Lista todos os alunos matriculados em seus cursos. 
+Esta parte da consulta utiliza o comando MATCH para encontrar padrões no grafo de dados. 
+Ele procura por nós que tenham o rótulo "Aluno" e estão conectados por uma relação de "MATRICULADO_EM" a nós com o rótulo "Curso". 
+Os nós correspondentes são atribuídos às variáveis aluno e curso.
+Após encontrar os padrões especificados, esta parte do código instrui o Cypher a retornar os valores 
+dos atributos 'nome' dos nós encontrados para os alunos e para os cursos.
+
+
+MATCH (curso:Curso)-[:OFERECIDO_EM]->(turma:Turma {codigo: 'MAT101'})
+
+RETURN curso.nome
+
+Descreva de forma detalhada o que aconteceu nessa bloco de código do Cypher? 
+
+Neste codigo o faz encontrar todos os cursos oferecidos em uma turma especifica.
+MATCH (curso:Curso)-[:OFERECIDO_EM]->(turma:Turma {codigo: 'MAT101'}): Esta parte da consulta utiliza o comando MATCH para encontrar padrões no grafo de dados. 
+Ele procura por nós que tenham o rótulo "Curso"e estejam conectados por uma relação de "OFERECIDO_EM" a uma turma específica, identificada pelo código 'MAT101'
+
+RETURN curso.nome: Após encontrar os padrões especificados, esta parte do código instrui o Cypher a retornar o valor do atributo 'nome' do nó do curso encontrado.
+
+
+
+MATCH (professor:Professor {nome: 'João'})-[:MINISTRA]->(:Turma)-[:OFERECIDO_EM]->(curso:Curso)<-[:MATRICULADO_EM]-(aluno:Aluno)
+
+RETURN aluno.nome, curso.nome
+
+Descreva de forma detalhada o que aconteceu nessa bloco de código do Cypher?
+
+A primeira parte da consulta utiliza o comando MATCH para encontrar padrões no grafo de dados.
+Após encontrar os padrões especificados na etapa anterior, esta parte do código instrui o Cypher a retornar os valores dos atributos 'nome' dos nós encontrados para os alunos e para os cursos. 
+O Cypher então retorna os nomes dos alunos e dos cursos em cada par de nós correspondentes que foram encontrados.
+
+
+MATCH (professor:Professor)-[:MINISTRA]->(:Turma)-[:OFERECIDO_EM]->(curso:Curso)
+
+WHERE curso.nome CONTAINS 'Matemática'
+
+RETURN DISTINCT professor.nome
+
+Descreva de forma detalhada o que aconteceu nessa bloco de código do Cypher?
+
+A primeira parte da consulta utiliza o comando MATCH para encontrar padrões no grafo de dados. A segunda parte da consulta aplica uma condição para filtrar os resultados. 
+Ela verifica se o atributo 'nome' do curso contém a palavra "Matemática".
+Após encontrar os padrões especificados na etapa anterior e filtrar os resultados, esta parte do código instrui o Cypher a retornar os valores dos atributos 'nome' dos nós de professor. 
+O operador DISTINCT garante que apenas valores únicos sejam retornados, evitando duplicatas. 
+O Cypher então retorna os nomes distintos dos professores que ministram cursos relacionados à Matemática.

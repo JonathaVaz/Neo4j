@@ -1,0 +1,168 @@
+Jonatha - Prática 3 : Sistema de Detectação de Fraudes em Cartões de Crédito.
+
+
+Descrição do Problema Mensionado:
+
+Vamos construir um exemplo prático de detecção de fraudes em uma empresa de comércio eletrônico utilizando o Neo4j. Neste exemplo, vamos simular transações entre usuários e identificar padrões suspeitos que possam indicar atividades fraudulentas.
+
+
+Cenário:
+
+Suponha que temos uma empresa de comércio eletrônico que deseja detectar transações fraudulentas. Vamos considerar que temos alguns usuários, transações e endereços IP registrados em nosso banco de dados.
+
+
+CREATE
+
+ (:Usuario {id: "user1", nome: "Alice"}),
+
+ (:Usuario {id: "user2", nome: "Bob"}),
+
+ (:Usuario {id: "user3", nome: "Charlie"}),
+
+ (:EnderecoIP {endereco: "192.168.0.1"}),
+
+ (:EnderecoIP {endereco: "192.168.0.2"}),
+
+ (:EnderecoIP {endereco: "192.168.0.3"}),
+
+ (:Transacao {id: "tx1", valor: 500}),
+
+ (:Transacao {id: "tx2", valor: 1500}),
+
+ (:Transacao {id: "tx3", valor: 200}),
+
+ (:Transacao {id: "tx4", valor: 1000})
+
+Resposta: Comente cada linha explicando o que foi criado e observe o resultado final?
+
+R: (:Usuario {id: "user1", nome: "Alice"})
+Cria um nó no banco de dados com a label Usuario.
+Define duas propriedades para este nó: id com valor "user1" e nome com valor "Alice".
+
+
+(:Usuario {id: "user2", nome: "Bob"}),
+Similar ao anterior, cria outro nó Usuario.
+Define as propriedades id como "user2" e nome como "Bob".
+
+
+(:Usuario {id: "user3", nome: "Charlie"}),
+Outro nó Usuario é criado.
+Define id como "user3" e nome como "Charlie".
+
+
+(:EnderecoIP {endereco: "192.168.0.1"}),
+Cria um nó com a label EnderecoIP.
+A propriedade endereco é definida como "192.168.0.1".
+
+
+(:EnderecoIP {endereco: "192.168.0.2"}),
+Cria um segundo nó EnderecoIP.
+O endereco é definido como "192.168.0.2".
+
+
+(:EnderecoIP {endereco: "192.168.0.3"}),
+Mais um nó EnderecoIP é criado.
+Estabelece endereco como "192.168.0.3".
+
+
+(:Transacao {id: "tx1", valor: 500}),
+Cria um nó Transacao.
+Define id como "tx1" e valor como 500.
+
+
+(:Transacao {id: "tx2", valor: 1500}),
+Cria outro nó Transacao.
+Define id como "tx2" e valor como 1500.
+
+
+(:Transacao {id: "tx3", valor: 200}),
+Mais um nó Transacao é criado.
+Define id como "tx3" e valor como 200.
+
+
+(:Transacao {id: "tx4", valor: 1000})
+Cria um último nó Transacao.
+Define id como "tx4" e valor como 1000.
+
+
+Resultado Final:
+
+Após a execução dessas linhas, serão criados 3 nós Usuario (Alice, Bob, Charlie), 3 nós EnderecoIP (com diferentes endereços IP) e 4 nós Transacao (cada um representando uma transação com seu respectivo valor). Esses nós agora existem no banco de dados com as propriedades definidas como especificado no script.
+
+
+MATCH (u:Usuario), (t:Transacao), (ip:EnderecoIP)
+
+WHERE u.id = "user1" AND t.id = "tx1" AND ip.endereco = "192.168.0.1"
+
+CREATE (u)-[:REALIZOU]->(t), (u)-[:USOU_IP]->(ip)
+
+Resposta: Comente cada linha explicando o que foi criado e observe o resultado final?
+
+R: Este comando MATCH procura por três tipos de nós no banco de dados. O WHERE filtra os nós encontrados na etapa anterior. Este comando CREATE cria duas relações a partir do nó Usuario (Alice) encontrado. 
+
+Resultado Final:
+
+Após a execução deste comando, serão criadas duas relações no banco de dados:
+Uma relação de REALIZOU entre o nó Usuario (Alice) e o nó Transacao (500), indicando que Alice realizou essa transação.
+Uma relação de USOU_IP entre o nó Usuario (Alice) e o nó EnderecoIP (192.168.0.1), indicando que Alice utilizou esse endereço IP durante a transação.
+
+
+MATCH (u:Usuario), (t:Transacao), (ip:EnderecoIP)
+
+WHERE u.id = "user3" AND t.id = "tx3" AND ip.endereco = "192.168.0.3"
+
+CREATE (u)-[:REALIZOU]->(t), (u)-[:USOU_IP]->(ip)
+
+Resposta: Comente cada linha explicando o que foi criado e observe o resultado final?
+
+R: 
+Este comando MATCH procura por três tipos de nós no banco de dados:
+u:Usuario: Nós com a label Usuario.
+t:Transacao: Nós com a label Transacao.
+ip:EnderecoIP: Nós com a label EnderecoIP.
+
+O WHERE filtra os nós encontrados na etapa anterior:
+u.id = "user3": Apenas o nó Usuario com id igual a "user3" (Charlie).
+t.id = "tx3": Apenas o nó Transacao com id igual a "tx3" (transação com valor 200).
+
+Este comando CREATE cria duas relações a partir do nó Usuario (Charlie) encontrado:
+(u)-[:REALIZOU]->(t): Cria uma relação do nó Usuario (Charlie) para o nó Transacao (200), representando que Charlie realizou essa transação.
+(u)-[:USOU_IP]->(ip): Cria uma relação do nó Usuario (Charlie) para o nó EnderecoIP (192.168.0.3), indicando que Charlie utilizou esse endereço IP durante a transação.
+
+Resultado Final:
+
+Após a execução deste comando, serão criadas duas novas relações no banco de dados:
+Uma relação de REALIZOU entre o nó Usuario (Charlie) e o nó Transacao (200), indicando que Charlie realizou essa transação.
+Uma relação de USOU_IP entre o nó Usuario (Charlie) e o nó EnderecoIP (192.168.0.3), indicando que Charlie utilizou esse endereço IP durante a transação.
+
+
+
+MATCH (u:Usuario)-[:REALIZOU]->(t:Transacao)-[:USOU_IP]->(ip:EnderecoIP)
+
+WHERE t.valor > 1000
+
+ AND NOT EXISTS((u)-[:REALIZOU]->(:Transacao {valor: 499}))
+
+RETURN u.nome AS Usuario, t.id AS Transacao, t.valor AS Valor, ip.endereco AS EnderecoIP
+
+Resposta: Comente cada linha explicando o que foi criado e observe o resultado final?
+
+R: 
+Este comando MATCH encontra padrões no grafo onde:
+u:Usuario está relacionado com t:Transacao por uma relação REALIZOU.
+t:Transacao está relacionado com ip:EnderecoIP por uma relação USOU_IP.
+
+O WHERE filtra os resultados obtidos na etapa anterior:
+t.valor > 1000: Apenas considera transações com valor superior a 1000.
+NOT EXISTS((u)-[:REALIZOU]->(:Transacao {valor: 499})): Garante que o usuário u não realizou uma transação com valor exato de 499.
+
+O RETURN especifica o que será retornado como resultado da consulta:
+u.nome AS Usuario: Retorna o nome do usuário.
+t.id AS Transacao: Retorna o ID da transação.
+t.valor AS Valor: Retorna o valor da transação.
+ip.endereco AS EnderecoIP: Retorna o endereço IP associado à transação.
+
+Resultado Final:
+
+O resultado final desta consulta será uma lista de dados que atendem aos critérios especificados:
+Os nós Usuario, Transacao e EnderecoIP que correspondem aos padrões definidos no MATCH e passam pelo filtro do WHERE.
