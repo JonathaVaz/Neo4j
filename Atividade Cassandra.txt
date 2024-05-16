@@ -1,0 +1,55 @@
+cqlsh
+
+cqlsh> DESCRIBE KEYSPACES;
+
+cqlsh> CREATE KEYSPACE unipe WITH REPLICATION = {‘class’:
+‘SimpleStrategy’, ‘replication_factor’: ‘3’};
+
+cqlsh> DESCRIBE KEYSPACES;
+
+cqlsh> use unipe;
+
+cqlsh:unipe> CREATE TABLE cadastro (
+... id uuid PRIMARY KEY,
+... nome text,
+... cargo text,);
+
+cqlsh:unipe> DESCRIBE TABLE cadastro;
+
+cqlsh:unipe> INSERT INTO cadastro (id, nome, cadstro) VALUES
+(1a8d6a80-33df-11e5-a151-feff819cdc9f, ‘Thyago’, ‘professor’);
+
+cqlsh:unipe> INSERT INTO cadastro (id, nome, cadstro) VALUES
+(1a8d649a-33df-11e5-a151-feff819cdc9f, ‘Afonso’, ‘professor’);
+
+cqlsh:unipe> INSERT INTO cadastro (id, nome, cadstro) VALUES
+(a70ca7ff-6d57-4f89-be89-08421c432bb7, ‘Fernanda’, ‘aluno’);
+
+cqlsh:unipe> INSERT INTO cadastro (id, nome, cadstro) VALUES
+(04b57f0e-33df-11e5-a151-feff819cdc9f, ‘Theo’, ‘aluno’);
+
+cqlsh:unipe> INSERT INTO cadastro (id, nome, cadstro) VALUES
+(c4f408dd-00f3-488e-8800-050d2775bbc7, ‘Sophia’, ‘funcionario’);
+
+cqlsh:unipe> INSERT INTO cadastro (id, nome, cadstro) VALUES
+(04b57c98-33df-11e5-a151-feff819cdc9f, ‘Leonardo’, ‘funcionario’);
+
+cqlsh:unipe> SELECT * FROM cadastro;
+
+
+PARTE 2 DA ATIVIDADE 3:
+
+1) cqlsh:unipe> UPDATE cadastro SET cargo = 'aluno'
+WHERE nome = 'Theo' AND cargo = 'funcionario';
+
+cqlsh:unipe> SELECT * FROM cadastro;
+
+
+2) cqlsh:unipe> DELETE from cadastro WHERE id = 1a8d649a-33df-11e5-a151-feff819cdc9f;
+
+cqlsh:unipe> SELECT * FROM cadastro;
+
+3) cqlsh:unipe> SELECT * FROM cadastro WHERE cargo = 'professor';
+
+4) cqlsh:unipe> SELECT * FROM cadastro WHERE cargo = 'aluno';
+
